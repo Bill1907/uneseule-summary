@@ -21,12 +21,13 @@ import {
 } from "@/components/ui/tabs"
 
 
-export default async function Index() {
+export default function Index() {
   const [summary, setSummary] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function onSubmit(contents: string) {
     try {
+      setIsLoading(true);
       const response = await fetch("/api/summarize", {
         method: "POST",
         headers: {
@@ -41,6 +42,7 @@ export default async function Index() {
       
       const { summary } = await response.json();
       setSummary(summary);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error:', error);
       setSummary("요약을 생성하는 중 오류가 발생했습니다.");
@@ -66,8 +68,8 @@ export default async function Index() {
             <CardContent className="space-y-2">
               <TextareaForm onSubmit={onSubmit} isLoading={isLoading}/>
               {summary && (
-                <div className="mt-6">
-                  <h3 className="text-lg font-semibold mb-2">요약 결과:</h3>
+                <div className="">
+                  <h3 className="text-lg font-semibold mb-2 mt-8">요약 결과:</h3>
                   <p className="p-4 bg-gray-100 rounded-md">{summary}</p>
                 </div>
               )}
